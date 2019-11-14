@@ -164,6 +164,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Moved the copy of the geometry history buffers to right after the depth mip chain generation.
 - Rename "Luminance" to "Nits" in UX for physical light unit
 - Rename FrameSettings "SkyLighting" to "SkyReflection"
+- Changed the way Sky Intensity (on Sky volument components) is handled. It's now a combo box where users can choose between Exposure, Multiplier or Lux (for HDRI sky only) instead of both multiplier and exposure being applied all the time. Added a new menu item to convert old profiles.
 
 ## [7.1.1] - 2019-09-05
 

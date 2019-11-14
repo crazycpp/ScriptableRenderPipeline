@@ -54,7 +54,7 @@ Shader "Hidden/HDRP/Sky/HDRISky"
         float3 rotDirY = float3(sinPhi, 0, cosPhi);
         dir = float3(dot(rotDirX, dir), dir.y, dot(rotDirY, dir));
 
-        float3 skyColor = SAMPLE_TEXTURECUBE_LOD(_Cubemap, sampler_Cubemap, dir, 0).rgb * _SkyParam.x * _SkyParam.y * exposure;
+        float3 skyColor = SAMPLE_TEXTURECUBE_LOD(_Cubemap, sampler_Cubemap, dir, 0).rgb * _SkyParam.x * exposure;
         skyColor = ClampToFloat16Max(skyColor);
         return float4(skyColor, 1.0);
     }

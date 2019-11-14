@@ -202,6 +202,50 @@ namespace UnityEditor.Rendering.HighDefinition
             EditorUtility.ClearProgressBar();
         }
 
+        [MenuItem("Edit/Render Pipeline/Upgrade Sky Intensity Mode", priority = CoreUtils.editMenuPriority2)]
+        static void UpgradeSkyIntensityMode(MenuCommand menuCommand)
+        {
+            if (!EditorUtility.DisplayDialog(DialogText.title, "This will upgrade all Volume Profiles containing Sky components with the new intensity mode paradigm. " + DialogText.projectBackMessage, DialogText.proceed, DialogText.cancel))
+                return;
+
+            var profilePathList = AssetDatabase.FindAssets("t:VolumeProfile", new string[] { "Assets" });
+
+            int profileCount = profilePathList.Length;
+            int profileIndex = 0;
+            foreach (string guid in profilePathList)
+            {
+                var assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                profileIndex++;
+                if (EditorUtility.DisplayCancelableProgressBar("Upgrade Sky Components", string.Format("({0} of {1}) {2}", profileIndex, profileCount, assetPath), (float)profileIndex / (float)profileCount))
+                    break;
+
+                VolumeProfile profile = AssetDatabase.LoadAssetAtPath(assetPath, typeof(VolumeProfile)) as VolumeProfile;
+
+                List<SkySettings> m_VolumeSkyList = new List<SkySettings>();
+                if (profile.TryGetAllSubclassOf<SkySettings>(typeof(SkySettings), m_VolumeSkyList))
+                {
+                    foreach (var sky in m_VolumeSkyList)
+                    {
+                        // Any component using Exposure must switch to multiplier as we will convert exposure*multiplier into a multiplier.
+                        if (sky.skyIntensityMode.value != SkyIntensityMode.Lux)
+                        {
+                            sky.skyIntensityMode.value = SkyIntensityMode.Multiplier;
+                        }
+
+                        // Convert exposure * multiplier to multiplier and reset exposure.
+                        sky.multiplier.value = sky.multiplier.value * ColorUtils.ConvertEV100ToExposure(-sky.exposure.value);
+                        sky.exposure.value = 0;
+
+                        EditorUtility.SetDirty(profile);
+                    }
+                }
+            }
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+            EditorUtility.ClearProgressBar();
+        }
+
         class DoCreateNewAsset<TAssetType> : ProjectWindowCallback.EndNameEditAction where TAssetType : ScriptableObject
         {
             public override void Action(int instanceId, string pathName, string resourceFile)

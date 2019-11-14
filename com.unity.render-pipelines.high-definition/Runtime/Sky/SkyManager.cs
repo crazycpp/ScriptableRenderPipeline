@@ -210,15 +210,16 @@ namespace UnityEngine.Rendering.HighDefinition
             }
 
         public void SetGlobalSkyData(CommandBuffer cmd, HDCamera hdCamera)
-            {
+        {
             if (IsCachedContextValid(hdCamera.lightingSky))
-                {
+            {
                 var renderer = m_CachedSkyContexts[hdCamera.lightingSky.cachedSkyRenderingContextId].renderer;
                 if (renderer != null)
-            {
-                    renderer.SetGlobalSkyData(cmd, hdCamera.lightingSky.skySettings);
+                {
+                    m_BuiltinParameters.skySettings = hdCamera.lightingSky.skySettings;
+                    renderer.SetGlobalSkyData(cmd, m_BuiltinParameters);
+                }
             }
-        }
         }
 
 #if UNITY_EDITOR
