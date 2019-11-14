@@ -226,6 +226,13 @@ namespace UnityEditor.Rendering.HighDefinition
                 {
                     foreach (var sky in m_VolumeSkyList)
                     {
+                        // Trivial default case we ignore, otherwise we end up with a multiplier of 0.833
+                        if (sky.skyIntensityMode.value != SkyIntensityMode.Exposure)
+                        {
+                            if (sky.multiplier.value == 1.0f && sky.exposure.value == 0.0f)
+                                continue;
+                        }
+
                         // Any component using Exposure must switch to multiplier as we will convert exposure*multiplier into a multiplier.
                         if (sky.skyIntensityMode.value != SkyIntensityMode.Lux)
                         {
