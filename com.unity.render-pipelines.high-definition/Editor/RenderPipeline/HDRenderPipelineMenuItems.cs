@@ -226,22 +226,18 @@ namespace UnityEditor.Rendering.HighDefinition
                 {
                     foreach (var sky in m_VolumeSkyList)
                     {
-                        // Trivial default case we ignore, otherwise we end up with a multiplier of 0.833
-                        if (sky.skyIntensityMode.value != SkyIntensityMode.Exposure)
+                        // Trivial case where multiplier is not used we ignore, otherwise we end up with a multiplier of 0.833 for a 0.0 EV100 exposure
+                        if (sky.multiplier.value == 1.0f)
+                            continue;
+                        else if (sky.skyIntensityMode.value == SkyIntensityMode.Exposure) // Not Lux
                         {
-                            if (sky.multiplier.value == 1.0f && sky.exposure.value == 0.0f)
-                                continue;
+                            // Any component using Exposure and Multiplier at the same time must switch to multiplier as we will convert exposure*multiplier into a multiplier.
+                            sky.skyIntensityMode.Override(SkyIntensityMode.Multiplier);
                         }
 
-                        // Any component using Exposure must switch to multiplier as we will convert exposure*multiplier into a multiplier.
-                        if (sky.skyIntensityMode.value != SkyIntensityMode.Lux)
-                        {
-                            sky.skyIntensityMode.value = SkyIntensityMode.Multiplier;
-                        }
-
-                        // Convert exposure * multiplier to multiplier and reset exposure.
-                        sky.multiplier.value = sky.multiplier.value * ColorUtils.ConvertEV100ToExposure(-sky.exposure.value);
-                        sky.exposure.value = 0;
+                        // Convert exposure * multiplier to multiplier and reset exposure for all non trivial cases.
+                        sky.multiplier.Override(sky.multiplier.value * ColorUtils.ConvertEV100ToExposure(-sky.exposure.value));
+                        sky.exposure.Override(0.0f);
 
                         EditorUtility.SetDirty(profile);
                     }
