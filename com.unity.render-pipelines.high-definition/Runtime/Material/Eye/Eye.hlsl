@@ -549,6 +549,9 @@ DirectLighting EvaluateBSDF_Rect(   LightLoopContext lightLoopContext,
 
     float3 positionWS = posInput.positionWS;
 
+    // Apply the barn door modification to the light data
+    RectangularLightApplyBarnDoor(lightData, positionWS);
+    
     float3 unL = lightData.positionRWS - positionWS;
 
     if (dot(lightData.forward, unL) < 0.0001)
