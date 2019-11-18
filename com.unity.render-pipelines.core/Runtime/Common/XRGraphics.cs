@@ -50,9 +50,9 @@ namespace UnityEngine.Rendering
             get
             {
             #if UNITY_2020_1_OR_NEWER
-                return UnityEditorInternal.VR.VREditor.GetVREnabledOnTargetGroup(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+                return false;
             #else
-                return PlayerSettings.virtualRealitySupported;
+                return UnityEditorInternal.VR.VREditor.GetVREnabledOnTargetGroup(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
             #endif
             }
         }
