@@ -47,7 +47,14 @@ namespace UnityEngine.Rendering
         // TryEnable gets updated before "play" is pressed- we use this for updating GUI only.
         public static bool tryEnable
         {
-            get { return PlayerSettings.virtualRealitySupported; }
+            get
+            {
+            #if UNITY_2020_1_OR_NEWER
+                return UnityEditorInternal.VR.VREditor.GetVREnabledOnTargetGroup(BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
+            #else
+                return PlayerSettings.virtualRealitySupported;
+            #endif
+            }
         }
 #endif
 

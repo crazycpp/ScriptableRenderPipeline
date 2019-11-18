@@ -169,6 +169,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Moved the copy of the geometry history buffers to right after the depth mip chain generation.
 - Rename "Luminance" to "Nits" in UX for physical light unit
 - Rename FrameSettings "SkyLighting" to "SkyReflection"
+- Replace usage of PlayerSettings.virtualRealitySupported by XRGraphics.tryEnable.
 
 ## [7.1.1] - 2019-09-05
 
