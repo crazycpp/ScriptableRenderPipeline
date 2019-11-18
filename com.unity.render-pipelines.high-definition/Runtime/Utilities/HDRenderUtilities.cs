@@ -268,7 +268,8 @@ namespace UnityEngine.Rendering.HighDefinition
             // Copy settings
             ComputeCameraSettingsFromProbeSettings(
                 settings, position,
-                out cameraSettings, out cameraPositionSettings, 0
+                out cameraSettings, out cameraPositionSettings, 0,
+                referenceFieldOfView
             );
 
             if (forceFlipY)
