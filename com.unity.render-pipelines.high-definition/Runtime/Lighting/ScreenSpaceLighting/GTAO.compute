@@ -175,7 +175,6 @@ void GTAO_KERNEL_NAME(uint3 dispatchThreadId : SV_DispatchThreadID)
     float step = max(1, fovCorrectedradiusSS * _AOInvStepCountPlusOne);
 
 // Note: We unroll here for Metal to work around a Metal shader compiler crash
-// case: 1197021
 #if defined(TEMPORAL) || defined(SHADER_API_METAL)
     [unroll]
 #endif
