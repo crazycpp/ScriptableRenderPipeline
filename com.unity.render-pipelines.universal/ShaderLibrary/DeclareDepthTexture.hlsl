@@ -1,29 +1,17 @@
 #ifndef UNITY_DECLARE_DEPTH_TEXTURE_INCLUDED
 #define UNITY_DECLARE_DEPTH_TEXTURE_INCLUDED
+#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-#if defined(UNITY_STEREO_INSTANCING_ENABLED) || defined(UNITY_STEREO_MULTIVIEW_ENABLED)
-TEXTURE2D_ARRAY(_CameraDepthTexture);
-#else
-TEXTURE2D(_CameraDepthTexture);
-#endif
+TEXTURE2D_X(_CameraDepthTexture);
 SAMPLER(sampler_CameraDepthTexture);
 
 float SampleSceneDepth(float2 uv)
 {
-#if defined(UNITY_STEREO_INSTANCING_ENABLED) || defined(UNITY_STEREO_MULTIVIEW_ENABLED)
-    return SAMPLE_TEXTURE2D_ARRAY(_CameraDepthTexture, sampler_CameraDepthTexture, uv, unity_StereoEyeIndex).r;
-#else
-    return SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, UnityStereoTransformScreenSpaceTex(uv)).r;
-#endif
+    return SAMPLE_TEXTURE2D_X(_CameraDepthTexture, sampler_CameraDepthTexture, UnityStereoTransformScreenSpaceTex(uv)).r;
 }
 
-float LoadSceneDepth(int2 uv)
+float LoadSceneDepth(uint2 uv)
 {
-#if defined(UNITY_STEREO_INSTANCING_ENABLED) || defined(UNITY_STEREO_MULTIVIEW_ENABLED)
-    return LOAD_TEXTURE2D_ARRAY(_CameraDepthTexture, uv, unity_StereoEyeIndex).r;
-#else
-    return LOAD_TEXTURE2D(_CameraDepthTexture, uv).r;
-#endif
+    return LOAD_TEXTURE2D_X(_CameraDepthTexture, UnityStereoTransformScreenSpaceTex(uv)).r;
 }
-
 #endif

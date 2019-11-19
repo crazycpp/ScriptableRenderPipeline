@@ -258,6 +258,17 @@ float2 UnityStereoTransformScreenSpaceTex(float2 uv)
 {
     return TransformStereoScreenSpaceTex(saturate(uv), 1.0);
 }
+
+//TODO : How implement this mod with absolute texture coordinate ?
+uint2 UnityStereoTransformScreenSpaceTex(uint2 uv, float w)
+{
+    return uv;
+}
+
+uint2 UnityStereoTransformScreenSpaceTex(uint2 uv)
+{
+    return uv;
+}
 #else
 
 #define UnityStereoTransformScreenSpaceTex(uv) uv
